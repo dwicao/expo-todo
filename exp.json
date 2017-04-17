@@ -1,0 +1,25 @@
+{
+  "name": "todo-list",
+  "description": "An empty new project",
+  "slug": "todo-list",
+  "privacy": "public",
+  "sdkVersion": "15.0.0",
+  "version": "1.0.0",
+  "orientation": "portrait",
+  "primaryColor": "#cccccc",
+  "icon": "./assets/icons/app.png",
+  "loading": {
+    "icon": "./assets/icons/loading.png",
+    "hideExponentText": false
+  },
+  "packagerOpts": {
+    "assetExts": ["ttf", "mp4"]
+  },
+  "ios": {
+    "bundleIdentifier": "com.dwicao.todolist",
+    "supportsTablet": true
+  },
+  "android": {
+    "package": "com.dwicao.todolist",
+  }
+}
