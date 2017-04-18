@@ -44,6 +44,7 @@ export default class Home extends Component {
 
     this.onChangeAddTodo = this.onChangeAddTodo.bind(this);
     this.onAddTodo = this.onAddTodo.bind(this);
+    this.onDelete = this.onDelete.bind(this);
   }
 
   onChangeAddTodo(text) {
@@ -60,6 +61,13 @@ export default class Home extends Component {
     
     this.setState({ dataSource: this.state.dataSource.cloneWithRows(this.rowData) });
   }
+
+  onDelete(id) {
+    const newData = this.rowData.filter(todo => todo._id !== id);
+    this.rowData = newData;
+
+    this.setState({ dataSource: this.state.dataSource.cloneWithRows(newData) });
+  }
   
   render() {
     return (
@@ -68,7 +76,9 @@ export default class Home extends Component {
           onPress={this.onAddTodo}
           value={this.state.addTodoValue}
         />
-        <ListTodo dataSource={this.state.dataSource}/>
+        <ListTodo dataSource={this.state.dataSource}
+          onDelete={this.onDelete}
+        />
       </View>
     );
   }

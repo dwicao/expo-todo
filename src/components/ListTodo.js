@@ -12,6 +12,8 @@ import { height, width } from '../utils';
 class ListTodo extends Component {
   constructor() {
     super();
+
+    this.renderRow = this.renderRow.bind(this);
   }
 
   render() {
@@ -20,6 +22,7 @@ class ListTodo extends Component {
         dataSource={this.props.dataSource}
         renderRow={this.renderRow}
         contentContainerStyle={styles.contentContainerStyle}
+        enableEmptySections={true}
       />
     );
   }
@@ -36,7 +39,7 @@ class ListTodo extends Component {
                 </TouchableOpacity>
             </View>
             <View style={styles.rightSection}>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={() => this.props.onDelete(rowData._id)}>
                     <MaterialIcons name="close" size={width * 0.07} color="gray" style={styles.icon}/>
                 </TouchableOpacity>
             </View>
@@ -75,6 +78,7 @@ const styles = StyleSheet.create({
 
 ListTodo.propTypes = {
     dataSource: PropTypes.object.isRequired,
+    onDelete: PropTypes.func.isRequired,
 };
 
 export default ListTodo;
