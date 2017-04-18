@@ -3,6 +3,7 @@ import {
     View,
     TextInput,
     StyleSheet,
+    TouchableOpacity,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { width, height } from '../utils';
@@ -31,7 +32,9 @@ export default class AddTodo extends Component {
                 />
                 { this.props.value !== '' &&
                     <View style={styles.iconWrapper}>
-                        <Ionicons name="md-add" size={width * 0.09} color="gray"/>
+                        <TouchableOpacity onPress={this.props.onPress}>
+                            <Ionicons name="md-add" size={width * 0.09} color="gray"/>
+                        </TouchableOpacity>
                     </View>
                 }
             </View>
@@ -43,7 +46,7 @@ const styles = StyleSheet.create({
     container: {
         flexDirection: 'row',
         backgroundColor: '#ccc',
-        marginBottom: width * 0.02,
+        marginBottom: width * 0.01
     },
     textInput: {
         height: 40,
@@ -59,5 +62,6 @@ const styles = StyleSheet.create({
 
 AddTodo.propTypes = {
     onChangeText: PropTypes.func.isRequired,
+    onPress: PropTypes.func.isRequired,
     value: PropTypes.string.isRequired,
 };

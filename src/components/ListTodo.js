@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import {
     ListView,
     View,
@@ -12,37 +12,12 @@ import { height, width } from '../utils';
 class ListTodo extends Component {
   constructor() {
     super();
-
-    const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
-
-    this.state = {
-        dataSource: ds.cloneWithRows([
-            'row1',
-            'row2',
-            'row3',
-            'row3',
-            'row3',
-            'row3',
-            'row3',
-            'row3',
-            'row3',
-            'row3',
-            'row3',
-            'row3',
-            'row3',
-            'row3',
-            'row3',
-            'row3',
-            'row3',
-            'row3',
-        ]),
-    };
   }
 
   render() {
     return (
       <ListView
-        dataSource={this.state.dataSource}
+        dataSource={this.props.dataSource}
         renderRow={this.renderRow}
         contentContainerStyle={styles.contentContainerStyle}
       />
@@ -93,5 +68,9 @@ const styles = StyleSheet.create({
         marginHorizontal: width * 0.02,
     },
 });
+
+ListTodo.propTypes = {
+    dataSource: PropTypes.object.isRequired,
+};
 
 export default ListTodo;
