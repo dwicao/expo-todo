@@ -45,6 +45,7 @@ export default class Home extends Component {
     this.onChangeAddTodo = this.onChangeAddTodo.bind(this);
     this.onAddTodo = this.onAddTodo.bind(this);
     this.onDelete = this.onDelete.bind(this);
+    this.onCheck = this.onCheck.bind(this);
   }
 
   onChangeAddTodo(text) {
@@ -59,14 +60,32 @@ export default class Home extends Component {
       text: this.state.addTodoValue,
     });
     
-    this.setState({ dataSource: this.state.dataSource.cloneWithRows(this.rowData) });
+    this.setNewData();
   }
 
   onDelete(id) {
     const newData = this.rowData.filter(todo => todo._id !== id);
     this.rowData = newData;
 
-    this.setState({ dataSource: this.state.dataSource.cloneWithRows(newData) });
+    this.setNewData();
+  }
+
+  onCheck(id) {
+    const newData = this.rowData.map(todo => {
+      if (todo._id !== id) {
+        return todo;
+      }
+
+      return Object.assign({}, todo, { isDone: !todo.isDone });
+    });
+
+    this.rowData = newData;
+
+    this.setNewData();
+  }
+
+  setNewData() {
+    this.setState({ dataSource: this.state.dataSource.cloneWithRows(this.rowData) });
   }
   
   render() {
@@ -78,6 +97,7 @@ export default class Home extends Component {
         />
         <ListTodo dataSource={this.state.dataSource}
           onDelete={this.onDelete}
+          onCheck={this.onCheck}
         />
       </View>
     );
@@ -89,6 +109,6 @@ const styles = StyleSheet.create({
     flex: 1,
     marginTop: 24,
     padding: width * 0.02,
-    backgroundColor: '#fff',
+    backgroundColor: '#e7e2d3',
   },
 });

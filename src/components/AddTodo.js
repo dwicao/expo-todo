@@ -29,11 +29,13 @@ export default class AddTodo extends Component {
                     underlineColorAndroid='transparent'
                     onChangeText={this.props.onChangeText}
                     value={this.props.value}
+                    placeholder="Add a Todo..."
+                    placeholderTextColor='#e7e2d3'
                 />
                 { this.props.value !== '' &&
                     <View style={styles.iconWrapper}>
                         <TouchableOpacity onPress={this.props.onPress}>
-                            <Ionicons name="md-add" size={width * 0.09} color="gray"/>
+                            <Ionicons name="md-add" size={width * 0.09} color="#e7b109"/>
                         </TouchableOpacity>
                     </View>
                 }
@@ -45,14 +47,15 @@ export default class AddTodo extends Component {
 const styles = StyleSheet.create({
     container: {
         flexDirection: 'row',
-        backgroundColor: '#ccc',
-        marginBottom: width * 0.01
+        backgroundColor: '#08042f',
+        marginBottom: width * 0.02
     },
     textInput: {
         height: 40,
         width: width * 0.88,
         paddingHorizontal: width * 0.02,
-        backgroundColor: '#ccc',
+        color: '#e7b109',
+        backgroundColor: '#08042f',
     },
     iconWrapper: {
         alignItems: 'center',
