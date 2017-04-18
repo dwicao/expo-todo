@@ -3,6 +3,7 @@ import {
     ListView,
     View,
     Text,
+    TextInput,
     StyleSheet,
     TouchableOpacity,
 } from 'react-native';
@@ -34,18 +35,30 @@ class ListTodo extends Component {
     return (
         <View style={styles.row}>
             <View style={styles.leftSection}>
-                <TouchableOpacity onPress={() => this.props.onCheck(rowData._id)}>
-                    <MaterialIcons name={isDoneOrNot} size={width * 0.07} color="#e7b109" style={styles.icon}/>
-                </TouchableOpacity>
-                <TouchableOpacity style={{ flex: 1 }}>
-                    <Text numberOfLines={1} style={textIsDoneOrNot}>{rowData.text}</Text>
-                </TouchableOpacity>
+                { !rowData.isEdit &&
+                    <TouchableOpacity onPress={() => this.props.onCheck(rowData._id)}>
+                        <MaterialIcons name={isDoneOrNot} size={width * 0.07} color="#e7b109" style={styles.icon}/>
+                    </TouchableOpacity>
+                }
+                { rowData.isEdit ?
+                    <TextInput style={styles.textInput}
+                        onChangeText={text => this.props.onChangeText(rowData._id, text)}
+                        value={rowData.text}
+                        onSubmitEditing={() => this.props.onSubmitEditing(rowData._id)}
+                    />
+                :
+                    <TouchableOpacity onPress={() => this.props.onPressEdit(rowData._id)} style={{ flex: 1 }}>
+                        <Text numberOfLines={1} style={textIsDoneOrNot}>{rowData.text}</Text>
+                    </TouchableOpacity>
+                }
             </View>
-            <View style={styles.rightSection}>
-                <TouchableOpacity onPress={() => this.props.onDelete(rowData._id)}>
-                    <MaterialIcons name="close" size={width * 0.07} color="#e7b109" style={styles.icon}/>
-                </TouchableOpacity>
-            </View>
+            { !rowData.isEdit &&
+                <View style={styles.rightSection}>
+                    <TouchableOpacity onPress={() => this.props.onDelete(rowData._id)}>
+                        <MaterialIcons name="close" size={width * 0.07} color="#e7b109" style={styles.icon}/>
+                    </TouchableOpacity>
+                </View>
+            }
         </View>
     );
   }
@@ -80,6 +93,11 @@ const styles = StyleSheet.create({
         backgroundColor: 'transparent',
         textDecorationLine: 'line-through',
     },
+    textInput: {
+        flex: 1,
+        color: '#e7b109',
+        marginHorizontal: width * 0.02,
+    },
     icon: {
         marginHorizontal: width * 0.02,
     },
@@ -89,6 +107,9 @@ ListTodo.propTypes = {
     dataSource: PropTypes.object.isRequired,
     onDelete: PropTypes.func.isRequired,
     onCheck: PropTypes.func.isRequired,
+    onPressEdit: PropTypes.func.isRequired,
+    onChangeText: PropTypes.func.isRequired,
+    onSubmitEditing: PropTypes.func.isRequired,
 };
 
 export default ListTodo;

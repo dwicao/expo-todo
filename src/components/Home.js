@@ -46,6 +46,10 @@ export default class Home extends Component {
     this.onAddTodo = this.onAddTodo.bind(this);
     this.onDelete = this.onDelete.bind(this);
     this.onCheck = this.onCheck.bind(this);
+    this.onPressEdit = this.onPressEdit.bind(this);
+    this.onEdit = this.onEdit.bind(this);
+    this.onSubmitAddTodo = this.onSubmitAddTodo.bind(this);
+    this.onSubmitEditTodo = this.onSubmitEditTodo.bind(this);
   }
 
   onChangeAddTodo(text) {
@@ -61,6 +65,12 @@ export default class Home extends Component {
     });
     
     this.setNewData();
+  }
+
+  onSubmitAddTodo() {
+    this.onAddTodo();
+
+    this.setState({ addTodoValue: '' });
   }
 
   onDelete(id) {
@@ -84,6 +94,38 @@ export default class Home extends Component {
     this.setNewData();
   }
 
+  onPressEdit(id) {
+    const newData = this.rowData.map(todo => {
+      if (todo._id !== id) {
+        return todo;
+      }
+
+      return Object.assign({}, todo, { isEdit: !todo.isEdit });
+    });
+
+    this.rowData = newData;
+
+    this.setNewData();
+  }
+
+  onSubmitEditTodo(id) {
+    this.onPressEdit(id);
+  }
+
+  onEdit(id, text) {
+    const newData = this.rowData.map(todo => {
+      if (todo._id !== id) {
+        return todo;
+      }
+
+      return Object.assign({}, todo, { text });
+    });
+
+    this.rowData = newData;
+
+    this.setNewData();
+  }
+
   setNewData() {
     this.setState({ dataSource: this.state.dataSource.cloneWithRows(this.rowData) });
   }
@@ -94,10 +136,14 @@ export default class Home extends Component {
         <AddTodo onChangeText={this.onChangeAddTodo}
           onPress={this.onAddTodo}
           value={this.state.addTodoValue}
+          onSubmitEditing={this.onSubmitAddTodo}
         />
         <ListTodo dataSource={this.state.dataSource}
           onDelete={this.onDelete}
           onCheck={this.onCheck}
+          onPressEdit={this.onPressEdit}
+          onChangeText={this.onEdit}
+          onSubmitEditing={this.onSubmitEditTodo}
         />
       </View>
     );

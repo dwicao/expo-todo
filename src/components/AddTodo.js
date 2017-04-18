@@ -31,6 +31,7 @@ export default class AddTodo extends Component {
                     value={this.props.value}
                     placeholder="Add a Todo..."
                     placeholderTextColor='#e7e2d3'
+                    onSubmitEditing={this.props.onSubmitEditing}
                 />
                 { this.props.value !== '' &&
                     <View style={styles.iconWrapper}>
@@ -67,4 +68,5 @@ AddTodo.propTypes = {
     onChangeText: PropTypes.func.isRequired,
     onPress: PropTypes.func.isRequired,
     value: PropTypes.string.isRequired,
+    onSubmitEditing: PropTypes.func.isRequired,
 };
