@@ -5,6 +5,7 @@ import {
   Text,
   View,
 } from 'react-native';
+import uuidV4 from 'uuid/v4';
 import AddTodo from './AddTodo';
 import ListTodo from './ListTodo';
 import { width, height } from '../utils';
@@ -16,9 +17,24 @@ export default class Home extends Component {
     const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
 
     this.rowData = [
-        'row1',
-        'row2',
-        'row3',
+      {
+        _id: uuidV4(),
+        isEdit: false,
+        isDone: false,
+        text: 'row 1 row 1 row 1 row 1 row 1 row 1 row 1 row 1 row 1 row 1 row 1 row 1 row 1 row 1 row 1 row 1 row 1 ',
+      },
+      {
+        _id: uuidV4(),
+        isEdit: false,
+        isDone: false,
+        text: 'row 2',
+      },
+      {
+        _id: uuidV4(),
+        isEdit: false,
+        isDone: false,
+        text: 'row 3',
+      },
     ];
 
     this.state = {
@@ -35,7 +51,13 @@ export default class Home extends Component {
   }
 
   onAddTodo() {
-    this.rowData.push(this.state.addTodoValue);
+    this.rowData.push({
+      _id: uuidV4(),
+      isDone: false,
+      isEdit: false,
+      text: this.state.addTodoValue,
+    });
+    
     this.setState({ dataSource: this.state.dataSource.cloneWithRows(this.rowData) });
   }
   

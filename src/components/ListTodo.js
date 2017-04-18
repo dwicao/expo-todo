@@ -26,19 +26,18 @@ class ListTodo extends Component {
 
   renderRow(rowData) {
       return (
-        <View style={styles.rowContainer}>
-            <View style={styles.row}>
+        <View style={styles.row}>
+            <View style={styles.leftSection}>
                 <TouchableOpacity>
                     <MaterialIcons name="check-box-outline-blank" size={width * 0.07} color="gray" style={styles.icon}/>
                 </TouchableOpacity>
-                <Text style={styles.text}>{rowData}</Text>
-            </View>
-            <View style={styles.row}>
-                <TouchableOpacity>
-                    <MaterialIcons name="edit" size={width * 0.07} color="gray" style={styles.icon}/>
+                <TouchableOpacity style={{ flex: 1 }}>
+                    <Text numberOfLines={1} style={styles.text}>{rowData.text}</Text>
                 </TouchableOpacity>
+            </View>
+            <View style={styles.rightSection}>
                 <TouchableOpacity>
-                    <MaterialIcons name="delete-forever" size={width * 0.07} color="gray" style={styles.icon}/>
+                    <MaterialIcons name="close" size={width * 0.07} color="gray" style={styles.icon}/>
                 </TouchableOpacity>
             </View>
         </View>
@@ -52,14 +51,19 @@ const styles = StyleSheet.create({
     },
     row: {
         flexDirection: 'row',
-        alignItems: 'center',
-    },
-    rowContainer: {
-        flexDirection: 'row',
         justifyContent: 'space-between',
         marginVertical: width * 0.01,
         height: height * 0.06,
         backgroundColor: '#BADA55',
+    },
+    leftSection: {
+        flex: 1,
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    rightSection: {
+        alignItems: 'center',
+        justifyContent: 'center',
     },
     text: {
         backgroundColor: 'transparent',
