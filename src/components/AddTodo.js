@@ -43,6 +43,7 @@ const styles = StyleSheet.create({
     container: {
         flexDirection: 'row',
         backgroundColor: '#ccc',
+        marginBottom: width * 0.02,
     },
     textInput: {
         height: 40,

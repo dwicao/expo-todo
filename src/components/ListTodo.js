@@ -1,9 +1,13 @@
 import React, { Component } from 'react';
 import {
     ListView,
+    View,
     Text,
     StyleSheet,
+    TouchableOpacity,
 } from 'react-native';
+import { MaterialIcons } from '@expo/vector-icons';
+import { height, width } from '../utils';
 
 class ListTodo extends Component {
   constructor() {
@@ -12,35 +16,81 @@ class ListTodo extends Component {
     const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
 
     this.state = {
-      dataSource: ds.cloneWithRows(['Loading...']),
+        dataSource: ds.cloneWithRows([
+            'row1',
+            'row2',
+            'row3',
+            'row3',
+            'row3',
+            'row3',
+            'row3',
+            'row3',
+            'row3',
+            'row3',
+            'row3',
+            'row3',
+            'row3',
+            'row3',
+            'row3',
+            'row3',
+            'row3',
+            'row3',
+        ]),
     };
-  }
-
-  componentDidMount() {
-    const url = 'https://jsonplaceholder.typicode.com/posts';
-
-    fetch(url)
-        .then(res => res.json())
-        .then(data => {
-            this.setState({ dataSource: this.state.dataSource.cloneWithRows(data) });
-        });
-
   }
 
   render() {
     return (
       <ListView
         dataSource={this.state.dataSource}
-        renderRow={(rowData) => <Text style={styles.text}>{rowData.title}</Text>}
+        renderRow={this.renderRow}
+        contentContainerStyle={styles.contentContainerStyle}
       />
     );
+  }
+
+  renderRow(rowData) {
+      return (
+        <View style={styles.rowContainer}>
+            <View style={styles.row}>
+                <TouchableOpacity>
+                    <MaterialIcons name="check-box-outline-blank" size={width * 0.07} color="gray" style={styles.icon}/>
+                </TouchableOpacity>
+                <Text style={styles.text}>{rowData}</Text>
+            </View>
+            <View style={styles.row}>
+                <TouchableOpacity>
+                    <MaterialIcons name="edit" size={width * 0.07} color="gray" style={styles.icon}/>
+                </TouchableOpacity>
+                <TouchableOpacity>
+                    <MaterialIcons name="delete-forever" size={width * 0.07} color="gray" style={styles.icon}/>
+                </TouchableOpacity>
+            </View>
+        </View>
+      );
   }
 }
 
 const styles = StyleSheet.create({
-    text: {
-        margin: 5,
+    contentContainerStyle: {
+        marginTop: -(width * 0.01),
+    },
+    row: {
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    rowContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginVertical: width * 0.01,
+        height: height * 0.06,
         backgroundColor: '#BADA55',
+    },
+    text: {
+        backgroundColor: 'transparent',
+    },
+    icon: {
+        marginHorizontal: width * 0.02,
     },
 });
 
