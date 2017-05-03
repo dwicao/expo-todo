@@ -38,8 +38,7 @@ export default class Home extends Component {
     fetch(`${API_URL}/task`)
       .then(res => res.json())
       .then(data => {
-        this.rowData = data;
-        this.setNewData();
+        this.setNewData(data);
       });
   }
 
@@ -77,8 +76,7 @@ export default class Home extends Component {
       method: 'DELETE'
     }).then(res => {
       const newData = this.rowData.filter(todo => todo.id !== id);
-      this.rowData = newData;
-      this.setNewData();
+      this.setNewData(newData);
     }).catch(err => console.log(err));
   }
 
@@ -99,8 +97,7 @@ export default class Home extends Component {
           return Object.assign({}, todo, { status: data.status });
         });
 
-        this.rowData = newData;
-        this.setNewData();
+        this.setNewData(newData);
       }).catch(err => console.log(err));
   }
 
@@ -111,8 +108,7 @@ export default class Home extends Component {
       return Object.assign({}, todo, { isEdit: !todo.isEdit });
     });
 
-    this.rowData = newData;
-    this.setNewData();
+    this.setNewData(newData);
   }
 
   onSubmitEditTodo(id) {
@@ -132,11 +128,14 @@ export default class Home extends Component {
         const newData = this.rowData.map(todo => {
           if (todo.id !== id) return todo;
 
-          return Object.assign({}, todo, { name: data.name, isEdit: !todo.isEdit });
+          return Object.assign({}, todo, {
+            name: data.name,
+            status: todo.status,
+            isEdit: !todo.isEdit
+          });
         });
 
-        this.rowData = newData;
-        this.setNewData();
+        this.setNewData(newData);
       }).catch(err => console.log(err));
   }
 
@@ -147,11 +146,14 @@ export default class Home extends Component {
       return Object.assign({}, todo, { name });
     });
 
-    this.rowData = newData;
-    this.setNewData();
+    this.setNewData(newData);
   }
 
-  setNewData() {
+  setNewData(newData) {
+    if (newData) {
+      this.rowData = newData;
+    }
+
     this.setState({ dataSource: this.state.dataSource.cloneWithRows(this.rowData) });
   }
   
