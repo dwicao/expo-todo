@@ -17,15 +17,6 @@ class ListTodo extends Component {
     this.renderRow = this.renderRow.bind(this);
   }
 
-  static propTypes = {
-    dataSource: PropTypes.object.isRequired,
-    onDelete: PropTypes.func.isRequired,
-    onCheck: PropTypes.func.isRequired,
-    onPressEdit: PropTypes.func.isRequired,
-    onChangeText: PropTypes.func.isRequired,
-    onSubmitEditing: PropTypes.func.isRequired,
-  }
-
   render() {
     return (
       <ListView
