@@ -5,41 +5,23 @@ import {
   Text,
   View,
 } from 'react-native';
-import uuidV4 from 'uuid/v4';
 import AddTodo from './AddTodo';
 import ListTodo from './ListTodo';
-import { width, height } from '../utils';
+import { width, height } from 'react-native-dimension';
+
+const API_URL = 'http://192.168.1.67:9090';
 
 export default class Home extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
 
     const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
 
-    this.rowData = [
-      {
-        _id: uuidV4(),
-        isEdit: false,
-        isDone: false,
-        text: 'row 1 row 1 row 1 row 1 row 1 row 1 row 1 row 1 row 1 row 1 row 1 row 1 row 1 row 1 row 1 row 1 row 1 ',
-      },
-      {
-        _id: uuidV4(),
-        isEdit: false,
-        isDone: false,
-        text: 'row 2',
-      },
-      {
-        _id: uuidV4(),
-        isEdit: false,
-        isDone: false,
-        text: 'row 3',
-      },
-    ];
+    this.rowData = [];
 
     this.state = {
       addTodoValue: '',
-      dataSource: ds.cloneWithRows(this.rowData),
+      dataSource: ds.cloneWithRows([]),
     };
 
     this.onChangeAddTodo = this.onChangeAddTodo.bind(this);
@@ -52,77 +34,120 @@ export default class Home extends Component {
     this.onSubmitEditTodo = this.onSubmitEditTodo.bind(this);
   }
 
+  componentDidMount() {
+    fetch(`${API_URL}/task`)
+      .then(res => res.json())
+      .then(data => {
+        this.rowData = data;
+        this.setNewData();
+      });
+  }
+
   onChangeAddTodo(text) {
     this.setState({ addTodoValue: text });
   }
 
   onAddTodo() {
-    this.rowData.push({
-      _id: uuidV4(),
-      isDone: false,
-      isEdit: false,
-      text: this.state.addTodoValue,
-    });
-    
-    this.setNewData();
+    const formData = new FormData();
+    formData.append('name', this.state.addTodoValue);
+
+    fetch(`${API_URL}/create-task`, {
+      method: 'POST',
+      body: formData
+    }).then(res => res.json())
+      .then(data => {
+        this.rowData.push({
+          id: data.id,
+          name: data.name,
+          created_at: data.created_at,
+          updated_at: data.updated_at
+        });
+        
+        this.setNewData();
+      }).catch(err => console.log(err));
   }
 
   onSubmitAddTodo() {
     this.onAddTodo();
-
     this.setState({ addTodoValue: '' });
   }
 
   onDelete(id) {
-    const newData = this.rowData.filter(todo => todo._id !== id);
-    this.rowData = newData;
-
-    this.setNewData();
+    fetch(`${API_URL}/delete-task/${id}`, {
+      method: 'DELETE'
+    }).then(res => {
+      const newData = this.rowData.filter(todo => todo.id !== id);
+      this.rowData = newData;
+      this.setNewData();
+    }).catch(err => console.log(err));
   }
 
-  onCheck(id) {
-    const newData = this.rowData.map(todo => {
-      if (todo._id !== id) {
-        return todo;
-      }
+  onCheck(id, name, status) {
+    const newStatus = (status === 'done') ? 'no' : 'done';
+    const formData = new FormData();
+    formData.append('name', name);
+    formData.append('status', newStatus);
 
-      return Object.assign({}, todo, { isDone: !todo.isDone });
-    });
+    fetch(`${API_URL}/update-task/${id}`, {
+      method: 'POST',
+      body: formData
+    }).then(res => res.json())
+      .then(data => {
+        const newData = this.rowData.map(todo => {
+          if (todo.id !== id) return todo;
 
-    this.rowData = newData;
+          return Object.assign({}, todo, { status: data.status });
+        });
 
-    this.setNewData();
+        this.rowData = newData;
+        this.setNewData();
+      }).catch(err => console.log(err));
   }
 
   onPressEdit(id) {
     const newData = this.rowData.map(todo => {
-      if (todo._id !== id) {
-        return todo;
-      }
+      if (todo.id !== id) return todo;
 
       return Object.assign({}, todo, { isEdit: !todo.isEdit });
     });
 
     this.rowData = newData;
-
     this.setNewData();
   }
 
   onSubmitEditTodo(id) {
-    this.onPressEdit(id);
+    const formData = new FormData();
+
+    this.rowData.map(todo => {
+      if (todo.id !== id) return todo;
+
+      return formData.append('name', todo.name);
+    });
+
+    fetch(`${API_URL}/update-task/${id}`, {
+      method: 'POST',
+      body: formData
+    }).then(res => res.json())
+      .then(data => {
+        const newData = this.rowData.map(todo => {
+          if (todo.id !== id) return todo;
+
+          return Object.assign({}, todo, { name: data.name, isEdit: !todo.isEdit });
+        });
+
+        this.rowData = newData;
+        this.setNewData();
+      }).catch(err => console.log(err));
   }
 
-  onEdit(id, text) {
+  onEdit(id, name) {
     const newData = this.rowData.map(todo => {
-      if (todo._id !== id) {
-        return todo;
-      }
+      if (todo.id !== id) return todo;
 
-      return Object.assign({}, todo, { text });
+      return Object.assign({}, todo, { name });
     });
 
     this.rowData = newData;
-
     this.setNewData();
   }
 
@@ -154,7 +179,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     marginTop: 24,
-    padding: width * 0.02,
+    padding: width(2),
     backgroundColor: '#e7e2d3',
   },
 });

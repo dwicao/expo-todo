@@ -6,14 +6,9 @@ import {
     TouchableOpacity,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { width, height } from '../utils';
+import { width, height } from 'react-native-dimension';
 
 export default class AddTodo extends Component {
-    constructor() {
-        super();
-
-    }
-
     changeWidthTextInput() {
         if (this.props.value !== '') {
             return styles.textInput;
@@ -36,7 +31,7 @@ export default class AddTodo extends Component {
                 { this.props.value !== '' &&
                     <View style={styles.iconWrapper}>
                         <TouchableOpacity onPress={this.props.onPress}>
-                            <Ionicons name="md-add" size={width * 0.09} color="#e7b109"/>
+                            <Ionicons name="md-add" size={width(9)} color="#e7b109"/>
                         </TouchableOpacity>
                     </View>
                 }
@@ -49,12 +44,12 @@ const styles = StyleSheet.create({
     container: {
         flexDirection: 'row',
         backgroundColor: '#08042f',
-        marginBottom: width * 0.02
+        marginBottom: width(2)
     },
     textInput: {
-        height: 40,
-        width: width * 0.88,
-        paddingHorizontal: width * 0.02,
+        height: height(7),
+        width: width(88),
+        paddingHorizontal: width(2),
         color: '#e7b109',
         backgroundColor: '#08042f',
     },

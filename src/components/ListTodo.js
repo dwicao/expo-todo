@@ -8,13 +8,22 @@ import {
     TouchableOpacity,
 } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
-import { height, width } from '../utils';
+import { height, width } from 'react-native-dimension';
 
 class ListTodo extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
 
     this.renderRow = this.renderRow.bind(this);
+  }
+
+  static propTypes = {
+    dataSource: PropTypes.object.isRequired,
+    onDelete: PropTypes.func.isRequired,
+    onCheck: PropTypes.func.isRequired,
+    onPressEdit: PropTypes.func.isRequired,
+    onChangeText: PropTypes.func.isRequired,
+    onSubmitEditing: PropTypes.func.isRequired,
   }
 
   render() {
@@ -29,33 +38,33 @@ class ListTodo extends Component {
   }
 
   renderRow(rowData) {
-    const isDoneOrNot = rowData.isDone ? "check-box" : "check-box-outline-blank";
-    const textIsDoneOrNot = rowData.isDone ? styles.textIsDone : styles.text;
+    const isDoneOrNot = rowData.status === "done" ? "check-box" : "check-box-outline-blank";
+    const textIsDoneOrNot = rowData.status === "done" ? styles.textIsDone : styles.text;
 
     return (
         <View style={styles.row}>
             <View style={styles.leftSection}>
                 { !rowData.isEdit &&
-                    <TouchableOpacity onPress={() => this.props.onCheck(rowData._id)}>
-                        <MaterialIcons name={isDoneOrNot} size={width * 0.07} color="#e7b109" style={styles.icon}/>
+                    <TouchableOpacity onPress={() => this.props.onCheck(rowData.id, rowData.name, rowData.status)}>
+                        <MaterialIcons name={isDoneOrNot} size={width(7)} color="#e7b109" style={styles.icon}/>
                     </TouchableOpacity>
                 }
                 { rowData.isEdit ?
                     <TextInput style={styles.textInput}
-                        onChangeText={text => this.props.onChangeText(rowData._id, text)}
-                        value={rowData.text}
-                        onSubmitEditing={() => this.props.onSubmitEditing(rowData._id)}
+                        onChangeText={name => this.props.onChangeText(rowData.id, name)}
+                        value={rowData.name}
+                        onSubmitEditing={() => this.props.onSubmitEditing(rowData.id)}
                     />
                 :
-                    <TouchableOpacity onPress={() => this.props.onPressEdit(rowData._id)} style={{ flex: 1 }}>
-                        <Text numberOfLines={1} style={textIsDoneOrNot}>{rowData.text}</Text>
+                    <TouchableOpacity onPress={() => this.props.onPressEdit(rowData.id)} style={{ flex: 1 }}>
+                        <Text numberOfLines={1} style={textIsDoneOrNot}>{rowData.name}</Text>
                     </TouchableOpacity>
                 }
             </View>
             { !rowData.isEdit &&
                 <View style={styles.rightSection}>
-                    <TouchableOpacity onPress={() => this.props.onDelete(rowData._id)}>
-                        <MaterialIcons name="close" size={width * 0.07} color="#e7b109" style={styles.icon}/>
+                    <TouchableOpacity onPress={() => this.props.onDelete(rowData.id)}>
+                        <MaterialIcons name="close" size={width(7)} color="#e7b109" style={styles.icon}/>
                     </TouchableOpacity>
                 </View>
             }
@@ -66,13 +75,13 @@ class ListTodo extends Component {
 
 const styles = StyleSheet.create({
     contentContainerStyle: {
-        marginTop: -(width * 0.01),
+        marginTop: -width(1),
     },
     row: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        marginVertical: width * 0.01,
-        height: height * 0.06,
+        marginVertical: width(1),
+        height: height(6),
         backgroundColor: '#2d2b69',
     },
     leftSection: {
@@ -96,19 +105,19 @@ const styles = StyleSheet.create({
     textInput: {
         flex: 1,
         color: '#e7b109',
-        marginHorizontal: width * 0.02,
+        marginHorizontal: width(2),
     },
     icon: {
-        marginHorizontal: width * 0.02,
+        marginHorizontal: width(2),
     },
 });
 
 ListTodo.propTypes = {
     dataSource: PropTypes.object.isRequired,
-    onDelete: PropTypes.func.isRequired,
     onCheck: PropTypes.func.isRequired,
-    onPressEdit: PropTypes.func.isRequired,
     onChangeText: PropTypes.func.isRequired,
+    onDelete: PropTypes.func.isRequired,
+    onPressEdit: PropTypes.func.isRequired,
     onSubmitEditing: PropTypes.func.isRequired,
 };
 
